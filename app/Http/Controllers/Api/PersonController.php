@@ -114,4 +114,30 @@ class PersonController extends Controller
             ], 500);
         }
     }
+
+    public function delete($id)
+    {
+        try {
+            $person = Person::findOrFail($id);
+
+            if ($person->gambar) {
+                Storage::delete($person->gambar);
+            }
+
+            $person->delete();
+
+            return response()->json([
+                'message' => 'Data Person berhasil dihapus'
+            ], 200);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'message' => 'Validation errors',
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
